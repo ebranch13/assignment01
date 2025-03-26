@@ -17,33 +17,45 @@
 */
 
 
-SELECT 
-    station_id, 
-    station_geog, 
-    SUM(num_trips) AS num_trips
-FROM (
-    SELECT 
-        ts.start_station AS station_id, 
-        ss.geog AS station_geog, 
-        COUNT(*) AS num_trips
-    FROM indego.trips_2021_q3 ts
-    JOIN indego.station_statuses ss 
-        ON ts.start_station = CAST(ss.id AS TEXT)
-    WHERE EXTRACT(HOUR FROM ts.start_time) BETWEEN 7 AND 9
-    GROUP BY ts.start_station, ss.geog
+-- SELECT 
+--     station_id, 
+--     station_geog, 
+--     SUM(num_trips) AS num_trips
+-- FROM (
+--     SELECT 
+--         ts.start_station AS station_id, 
+--         ss.geog AS station_geog, 
+--         COUNT(*) AS num_trips
+--     FROM indego.trips_2021_q3 ts
+--     JOIN indego.station_statuses ss 
+--         ON ts.start_station = CAST(ss.id AS TEXT)
+--     WHERE EXTRACT(HOUR FROM ts.start_time) BETWEEN 7 AND 9
+--     GROUP BY ts.start_station, ss.geog
 
-    UNION ALL
+--     UNION ALL
      
-    SELECT 
-        ts.start_station AS station_id, 
-        ss.geog AS station_geog, 
-        COUNT(*) AS num_trips
-    FROM indego.trips_2022_q3 ts
-    JOIN indego.station_statuses ss 
-        ON ts.start_station = CAST(ss.id AS TEXT)
-    WHERE EXTRACT(HOUR FROM ts.start_time) BETWEEN 7 AND 9
-    GROUP BY ts.start_station, ss.geog
-) AS union_result 
-GROUP BY station_id, station_geog 
+--     SELECT 
+--         ts.start_station AS station_id, 
+--         ss.geog AS station_geog, 
+--         COUNT(*) AS num_trips
+--     FROM indego.trips_2022_q3 ts
+--     JOIN indego.station_statuses ss 
+--         ON ts.start_station = CAST(ss.id AS TEXT)
+--     WHERE EXTRACT(HOUR FROM ts.start_time) BETWEEN 7 AND 9
+--     GROUP BY ts.start_station, ss.geog
+-- ) AS union_result 
+-- GROUP BY station_id, station_geog 
+-- ORDER BY num_trips DESC
+-- LIMIT 5;
+
+SELECT 
+    start_station AS station_id, 
+    ss.geog AS station_geog, 
+    COUNT(*) AS num_trips
+FROM indego.trips ts
+JOIN indego.station_statuses ss 
+    ON ts.start_station = CAST(ss.id AS TEXT)
+WHERE EXTRACT(HOUR FROM ts.start_time) BETWEEN 7 AND 9
+GROUP BY start_station, ss.geog
 ORDER BY num_trips DESC
 LIMIT 5;
