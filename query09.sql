@@ -7,10 +7,10 @@
 */
 
 -- Enter your SQL query here
-select passholder_type, count(*) from indego.trips_2021_q3
+select passholder_type, count(*) as num_trips from indego.trips_2021_q3
 group by passholder_type
 
 union all
 
-select passholder_type, count(*) from indego.trips_2022_q3
+select passholder_type, count(*) as num_trips from indego.trips_2022_q3
 group by passholder_type;

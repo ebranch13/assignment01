@@ -9,9 +9,14 @@
 
 -- Enter your SQL query here
 
-select ST_Distance(ST_MakePoint(-75.192584, 39.952415)::geography, geog) as distance from indego.station_statuses;
+select 
+    station_id,
+    station_geog,
+    round(ST_Distance(ST_MakePoint(-75.192584, 39.952415)::geography, geog) / 50) * 50 as distance
+from 
+    indego.station_statuses;
 
-SHOW search_path;
+
 
 
 
