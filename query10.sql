@@ -8,3 +8,10 @@
 */
 
 -- Enter your SQL query here
+
+select ST_Distance(ST_MakePoint(-75.192584, 39.952415)::geography, geog) as distance from indego.station_statuses;
+
+SHOW search_path;
+
+
+
