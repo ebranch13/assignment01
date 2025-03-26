@@ -79,8 +79,9 @@
 
 select 
     station_id, 
-    ST_AsText(station_geog) as station_geog, 
+    st_asbinary(station_geog) as station_geog, 
     count(*) as num_trips
+
 from (
    select 
         ts.start_station as station_id, 
@@ -101,7 +102,7 @@ from (
         on ts.start_station = ss.id::text  -- ensure correct type matching
     where extract(hour from ts.start_time) >= 7
     and extract(hour from ts.start_time) < 10
-) as union_result 
+) as union_result
 group by station_id, station_geog 
 order by num_trips desc
 limit 5;
