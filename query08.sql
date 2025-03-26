@@ -48,42 +48,12 @@
 -- ORDER BY num_trips DESC
 -- LIMIT 5;
 
--- select 
---     station_id, 
---     station_geog, 
---     count(*) as num_trips
--- from (
---     select 
---         ts.start_station as station_id, 
---         ss.geog::geography as station_geog,  -- ensure geography type
---         ts.start_time
---     from indego.trips_2021_q3 ts
---     join indego.station_statuses ss 
---         on ts.start_station = ss.id::text  -- ensure correct type matching
---     where extract(hour from ts.start_time) >= 7
---     and extract(hour from ts.start_time) < 10  -- ensures 9:59am is included
---     union all
---     select 
---         ts.start_station as station_id, 
---         ss.geog::geography as station_geog,  -- ensure geography type
---         ts.start_time
---     from indego.trips_2022_q3 ts
---     join indego.station_statuses ss 
---         on ts.start_station = ss.id::text  -- ensure correct type matching
---     where extract(hour from ts.start_time) >= 7
---     and extract(hour from ts.start_time) < 10
--- ) as union_result 
--- group by station_id, station_geog 
--- order by num_trips desc
--- limit 5;
-
 select 
     station_id, 
-    st_asbinary(station_geog) as station_geog, 
+    station_geog, 
     count(*) as num_trips
-
 from (
-   select 
+    select 
         ts.start_station as station_id, 
         ss.geog::geography as station_geog,  -- ensure geography type
         ts.start_time
@@ -102,7 +72,8 @@ from (
         on ts.start_station = ss.id::text  -- ensure correct type matching
     where extract(hour from ts.start_time) >= 7
     and extract(hour from ts.start_time) < 10
-) as union_result
+) as union_result 
 group by station_id, station_geog 
 order by num_trips desc
 limit 5;
+
