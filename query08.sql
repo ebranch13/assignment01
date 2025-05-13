@@ -11,33 +11,20 @@
 -- Enter your SQL query here
 
 
-
-SELECT 
-    station_id, 
-    station_geog, 
+SELECT
+    indego.station_statuses.id AS station_id,
+    ST_ASTEXT(indego.station_statuses.geog) AS station_geog,
     COUNT(*) AS num_trips
 FROM (
-    SELECT 
-        ts.start_station AS station_id, 
-        ss.geog::geography AS station_geog,  
-        ts.start_time
-    FROM indego.trips_2021_q3 ts
-    JOIN indego.station_statuses ss 
-        ON ts.start_station = ss.id::text 
-    WHERE EXTRACT(hour FROM ts.start_time) >= 7
-      AND EXTRACT(hour FROM ts.start_time) < 10  
+    SELECT * FROM indego.trips_2021_q3
     UNION ALL
-    SELECT 
-        ts.start_station AS station_id, 
-        ss.geog::geography AS station_geog,  
-        ts.start_time
-    FROM indego.trips_2022_q3 ts
-    JOIN indego.station_statuses ss 
-        ON ts.start_station = ss.id::text  
-    WHERE EXTRACT(hour FROM ts.start_time) >= 7
-      AND EXTRACT(hour FROM ts.start_time) < 10
-) AS union_result 
-GROUP BY station_id, station_geog 
-ORDER BY num_trips DESC
-LIMIT 5;
+    SELECT * FROM indego.trips_2022_q3
+) AS full_trips
 
+INNER JOIN indego.station_statuses
+    ON full_trips.start_station = indego.station_statuses.id::text
+
+WHERE EXTRACT(HOUR FROM full_trips.start_time) BETWEEN 7 AND 9
+GROUP BY indego.station_statuses.id, indego.station_statuses.geog
+ORDER BY COUNT(*) DESC
+LIMIT 5;

@@ -9,11 +9,11 @@
 
     -- Enter your SQL query here
     SELECT passholder_type, COUNT(*) AS num_trips 
+    FROM (
+    SELECT passholder_type
     FROM indego.trips_2021_q3
-    GROUP BY passholder_type
-
     UNION ALL
-
-    SELECT passholder_type, COUNT(*) AS num_trips 
+    SELECT passholder_type
     FROM indego.trips_2022_q3
+    )
     GROUP BY passholder_type;
