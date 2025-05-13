@@ -28,15 +28,16 @@
 -- limit 1;
 
 
-SELECT 
-    start_station AS station_id, 
-    start_station AS station_name, 
+SELECT
+    station_statuses.id AS station_id,
+    station_statuses.name AS station_name,
     ROUND(
         ST_DISTANCE(
             indego.station_statuses.geog,
             ST_SETSRID(ST_MAKEPOINT(-75.192584, 39.952415), 4326)::geography
         ) / 50
     ) * 50 AS distance
+
 FROM indego.station_statuses
 ORDER BY distance DESC
 LIMIT 1;
